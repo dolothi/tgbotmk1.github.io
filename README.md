@@ -1,3 +1,4 @@
+
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -44,9 +45,9 @@
                 justify-content: center;
             }
             .main-wrapper {
-                width: 400px; /* Увеличил ширину на ПК */
+                width: 400px;
                 max-width: 90vw;
-                height: 90vh; /* Увеличил высоту */
+                height: 90vh;
                 border-radius: 20px;
                 overflow: hidden;
                 box-shadow: 0 10px 30px rgba(0,0,0,0.1);
@@ -55,7 +56,7 @@
                 position: relative;
             }
         }
-        /* Стили существующего кода (оставлены почти без изменений) */
+        
         .header {
             background: var(--tg-theme-header-bg-color);
             padding: 16px 20px;
@@ -63,12 +64,11 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid rgba(0,0,0,0.08);
+            position: sticky; /* Sticky header */
+            top: 0;
+            z-index: 10;
         }
 
-        .header h1 {
-            font-size: 20px;
-            font-weight: 600;
-        }
 
         .stats {
             font-size: 13px;
@@ -81,7 +81,7 @@
             flex-direction: column;
             padding: 16px;
             padding-bottom: 100px;
-            overflow-y: auto; /* Добавлено для прокрутки контента */
+            overflow-y: auto;
         }
 
         .input-wrapper {
@@ -90,7 +90,7 @@
             margin-bottom: 20px;
         }
 
-        .input-wrapper input {
+        .input-wrapper input[type="text"] {
             flex: 1;
             padding: 14px 16px;
             border: none;
@@ -101,6 +101,29 @@
             outline: none;
             transition: box-shadow 0.2s;
         }
+        /* Стили для кнопки выбора времени */
+        .time-select-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 12px;
+            background: var(--tg-theme-secondary-bg-color);
+            color: var(--tg-theme-text-color);
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.15s, opacity 0.15s;
+        }
+        .time-select-btn:active {
+            transform: scale(0.95);
+            opacity: 0.8;
+        }
+        .time-select-btn.active {
+            box-shadow: 0 0 0 2px var(--tg-theme-button-color); /* Выделение активной кнопки */
+        }
+
 
         .input-wrapper input::placeholder {
             color: var(--tg-theme-hint-color);
@@ -144,9 +167,17 @@
             padding: 14px 16px;
             background: var(--tg-theme-secondary-bg-color);
             border-radius: 12px;
-            transition: transform 0.15s, opacity 0.15s;
-            position: relative; /* Для конфетти и похвалы */
+            transition: transform 0.15s, opacity 0.15s, background 0.2s;
+            position: relative;
         }
+        /* Стиль для просроченных задач */
+        .todo-item.overdue {
+            background-color: var(--tg-theme-destructive-bg-color);
+        }
+        .todo-item.overdue .todo-text, .todo-item.overdue .todo-due-date {
+            color: white;
+        }
+
 
         .todo-item.completed .todo-text {
             text-decoration: line-through;
@@ -276,36 +307,28 @@
             animation: slideIn 0.3s ease-out;
         }
 
-        /* Более резкое конфетти */
-        @keyframes confetti-fade-out {
-            0% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
-            50% { opacity: 1; transform: translate(-50%, -150%) scale(1.2) rotate(180deg); } /* Подлетает вверх */
-            100% { opacity: 0; transform: translate(-50%, -250%) scale(0.5) rotate(360deg); } /* Исчезает вверху */
-        }
-        @keyframes confetti-fall-fast {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(150px) rotate(360deg); opacity: 0; }
+        /* Анимация конфетти (палочки) */
+        @keyframes confetti-spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); opacity: 1; }
+            100% { transform: translate(var(--travelX), var(--travelY)) rotate(720deg) scale(0); opacity: 0; }
         }
 
         .confetti {
             position: absolute;
-            width: 8px; /* Увеличил размер */
-            height: 8px; /* Увеличил размер */
+            width: 4px; /* Ширина палочки */
+            height: 12px; /* Длина палочки */
             background-color: var(--color);
-            border-radius: 50%;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation: confetti-fall-fast 0.8s forwards ease-out; /* Более быстрая анимация */
+            border-radius: 2px; /* Закругленные концы */
+            animation: confetti-spin 1.2s forwards cubic-bezier(0.2, 1, 0.7, 1); /* Мягкое исчезание */
             pointer-events: none;
-            z-index: 2; /* Над элементами */
-            will-change: transform, opacity; /* Для оптимизации анимации */
+            z-index: 2;
+            transform-origin: center;
         }
         .confetti-praise {
             position: absolute;
             font-size: 16px;
             font-weight: 600;
-            color: var(--tg-theme-button-color); /* Или другой яркий цвет */
+            color: var(--tg-theme-button-color);
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
@@ -319,6 +342,100 @@
             0% { opacity: 0; transform: translate(-50%, 0px) scale(0.8); }
             10% { opacity: 1; transform: translate(-50%, -20px) scale(1.1); }
             100% { opacity: 0; transform: translate(-50%, -70px) scale(1); }
+        }
+
+        /* Эффект жидкого стекла */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4); /* Полупрозрачный черный фон */
+            backdrop-filter: blur(8px); /* Эффект размытия */
+            -webkit-backdrop-filter: blur(8px); /* Для Safari */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease-out;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .modal-content {
+            background: var(--tg-theme-secondary-bg-color);
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            max-width: 90vw;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+        }
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .modal-content h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: var(--tg-theme-text-color);
+        }
+        .modal-content input[type="time"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--tg-theme-hint-color);
+            border-radius: 8px;
+            background: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
+            font-size: 16px;
+            margin-bottom: 20px;
+            -webkit-appearance: none; /* Убираем стандартные стили для вебкит-браузеров */
+            outline: none;
+        }
+        /* Стиль для кастомного appearance на iOS */
+        @supports (-webkit-overflow-scrolling: touch) {
+            .modal-content input[type="time"] {
+                padding: 12px;
+                border: none;
+                border-radius: 10px;
+                background: var(--tg-theme-secondary-bg-color);
+            }
+        }
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .modal-buttons button {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: opacity 0.15s;
+        }
+        .modal-buttons button:active {
+            opacity: 0.8;
+        }
+        .modal-ok-btn {
+            background: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+        }
+        .modal-cancel-btn {
+            background: var(--tg-theme-secondary-bg-color);
+            color: var(--tg-theme-text-color);
+        }
+        .modal-clear-btn {
+            background: var(--tg-theme-destructive-bg-color);
+            color: white;
         }
 
 
@@ -348,7 +465,7 @@
         <div class="container">
             <div class="input-wrapper">
                 <input type="text" id="todo-input" placeholder="Новая задача..." maxlength="200">
-                <input type="datetime-local" id="due-date-input"> <!-- Сделал видимым -->
+                <button class="time-select-btn" id="time-select-btn">🕒</button>
                 <button class="add-btn" id="add-btn">+</button>
             </div>
 
@@ -365,15 +482,29 @@
         </div>
     </div>
 
+    <!-- Модальное окно для выбора времени -->
+    <div class="modal-overlay" id="time-modal-overlay">
+        <div class="modal-content">
+            <h3>Установите время</h3>
+            <input type="time" id="modal-time-input">
+            <div class="modal-buttons">
+                <button class="modal-ok-btn" id="modal-ok-btn">ОК</button>
+                <button class="modal-cancel-btn" id="modal-cancel-btn">Отмена</button>
+                <button class="modal-clear-btn" id="modal-clear-btn">Очистить</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.ready();
 
-        // Устанавливаем заголовок страницы (будет отображаться в адресной строке)
-        tg.setHeaderColor(tg.themeParams.bg_color || '#ffffff'); // Применяем цвет фона к заголовку
-        tg.setBackgroundColor(tg.themeParams.bg_color || '#ffffff'); // Устанавливаем цвет фона
+        tg.setHeaderColor(tg.themeParams.bg_color || '#ffffff');
+        tg.setBackgroundColor(tg.themeParams.bg_color || '#ffffff');
+        tg.MainButton.textColor = tg.themeParams.button_text_color || '#ffffff';
+        tg.MainButton.color = tg.themeParams.button_color || '#2481cc';
 
         if (tg.themeParams) {
             const root = document.documentElement;
@@ -388,13 +519,22 @@
         }
 
         const todoInput = document.getElementById('todo-input');
-        const dueDateInput = document.getElementById('due-date-input');
+        const timeSelectBtn = document.getElementById('time-select-btn');
         const addBtn = document.getElementById('add-btn');
         const todoList = document.getElementById('todo-list');
         const emptyState = document.getElementById('empty-state');
         const clearAllBtn = document.getElementById('clear-all-btn');
         const completedCountEl = document.getElementById('completed-count');
         const totalCountEl = document.getElementById('total-count');
+
+        // Модальное окно
+        const timeModalOverlay = document.getElementById('time-modal-overlay');
+        const modalTimeInput = document.getElementById('modal-time-input');
+        const modalOkBtn = document.getElementById('modal-ok-btn');
+        const modalCancelBtn = document.getElementById('modal-cancel-btn');
+        const modalClearBtn = document.getElementById('modal-clear-btn');
+        let selectedTime = null; // Для хранения выбранного времени
+
 
         const praises = ["Так держать!", "Молодец!", "Отличная работа!", "Супер!", "Продолжай в том же духе!"];
 
@@ -404,7 +544,7 @@
             localStorage.setItem('telegram-todo-list', JSON.stringify(todos));
             updateStats();
             updateClearAllButtonVisibility();
-            updateMiniAppTitle(); // Обновляем заголовок Mini App
+            updateMiniAppTitle();
         }
 
         function updateStats() {
@@ -417,7 +557,7 @@
             const completed = todos.filter(t => t.completed).length;
             const total = todos.length;
             if (total > 0) {
-                tg.MainButton.text = `Выполнено: ${completed}/${total}`;
+                tg.MainButton.setText(`Завершено: ${completed}/${total} задач`);
                 tg.MainButton.show();
             } else {
                 tg.MainButton.hide();
@@ -435,14 +575,23 @@
             return div.innerHTML;
         }
 
+        function isOverdue(dueDate) {
+            if (!dueDate) return false;
+            const now = new Date();
+            const due = new Date(dueDate);
+            // Если задача не выполнена и время просрочено
+            return !this.completed && due <= now;
+        }
+
+
         function createTodoElement(todo, index) {
             const li = document.createElement('li');
-            li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
+            li.className = `todo-item ${todo.completed ? 'completed' : ''} ${isOverdue.call(todo, todo.dueDate) ? 'overdue' : ''}`;
             li.dataset.index = index;
             li.innerHTML = `
                 <div class="checkbox" data-index="${index}"></div>
                 <span class="todo-text">${escapeHtml(todo.text)}</span>
-                ${todo.dueDate ? `<span class="todo-due-date">${formatDate(todo.dueDate)}</span>` : ''}
+                ${todo.dueDate ? `<span class="todo-due-date">${formatTime(todo.dueDate)}</span>` : ''}
                 <button class="delete-btn" data-index="${index}">×</button>
             `;
             return li;
@@ -466,13 +615,13 @@
 
         function addTodo() {
             const text = todoInput.value.trim();
-            const dueDate = dueDateInput.value;
             if (!text) return;
 
-            const newTodo = { text, completed: false, dueDate };
+            const newTodo = { text, completed: false, dueDate: selectedTime };
             todos.push(newTodo);
             todoInput.value = '';
-            dueDateInput.value = '';
+            selectedTime = null; // Сброс выбранного времени
+            timeSelectBtn.classList.remove('active'); // Убираем выделение кнопки времени
             saveTodos();
             
             renderTodos();
@@ -493,6 +642,7 @@
             const todoItem = todoList.children[index];
             if (todoItem) {
                 todoItem.classList.toggle('completed', todos[index].completed);
+                todoItem.classList.remove('overdue'); // Убираем просроченность, если задача выполнена
             }
             
             if (todos[index].completed) {
@@ -501,10 +651,13 @@
                 tg.HapticFeedback.notificationOccurred('success');
             } else {
                 tg.HapticFeedback.impactOccurred('light');
+                // При снятии галочки, переоцениваем overdue статус
+                if (isOverdue.call(todos[index], todos[index].dueDate)) {
+                    todoItem.classList.add('overdue');
+                }
             }
 
             saveTodos();
-            updateClearAllButtonVisibility();
         }
 
         function deleteTodo(index) {
@@ -527,14 +680,16 @@
             tg.HapticFeedback.impactOccurred('medium');
         }
 
-        function formatDate(dateString) {
-            const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-            return new Date(dateString).toLocaleDateString('ru-RU', options);
+        function formatTime(dateTimeString) {
+            if (!dateTimeString) return '';
+            const date = new Date(dateTimeString);
+            return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
         }
+
 
         function triggerConfetti(targetElement) {
             const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800', '#FF5722'];
-            const numberOfConfetti = 20; // Уменьшил количество для лучшей производительности
+            const numberOfConfetti = 30; // Увеличил количество палочек
             
             const rect = targetElement.getBoundingClientRect();
             const startX = rect.left + rect.width / 2;
@@ -544,12 +699,19 @@
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti');
                 confetti.style.setProperty('--color', colors[Math.floor(Math.random() * colors.length)]);
-                confetti.style.left = `${startX}px`;
-                confetti.style.top = `${startY}px`;
-                confetti.style.animationDelay = `${Math.random() * 0.2}s`; // Уменьшил задержку
-                // Задаем случайное направление для разлета
-                const angle = Math.random() * Math.PI * 2; // От 0 до 2*PI
-                const distance = Math.random() * 50 + 20; // От 20 до 70px
+                
+                // Случайное смещение от центра кнопки
+                const offsetX = (Math.random() - 0.5) * 20; 
+                const offsetY = (Math.random() - 0.5) * 20;
+
+                confetti.style.left = `${startX + offsetX}px`;
+                confetti.style.top = `${startY + offsetY}px`;
+
+                confetti.style.animationDelay = `${Math.random() * 0.4}s`; // Задержка
+                
+                // Случайный разлет в стороны
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * 80 + 30; // От 30 до 110px
                 confetti.style.setProperty('--travelX', `${Math.cos(angle) * distance}px`);
                 confetti.style.setProperty('--travelY', `${Math.sin(angle) * distance}px`);
 
@@ -577,6 +739,52 @@
             });
         }
 
+        // Обработчики событий для модального окна времени
+        timeSelectBtn.addEventListener('click', () => {
+            timeModalOverlay.classList.add('active');
+            // Устанавливаем текущее время или ранее выбранное
+            modalTimeInput.value = selectedTime ? new Date(selectedTime).toLocaleTimeString('ru', {hour: '2-digit', minute: '2-digit'}) : '';
+            tg.HapticFeedback.impactOccurred('light');
+        });
+
+        modalOkBtn.addEventListener('click', () => {
+            if (modalTimeInput.value) {
+                // Извлекаем только время и привязываем его к текущей дате
+                const now = new Date();
+                const [hours, minutes] = modalTimeInput.value.split(':').map(Number);
+                now.setHours(hours, minutes, 0, 0);
+                selectedTime = now.toISOString(); // Сохраняем как ISO строку
+                timeSelectBtn.classList.add('active'); // Выделяем кнопку, что время выбрано
+            } else {
+                selectedTime = null;
+                timeSelectBtn.classList.remove('active');
+            }
+            timeModalOverlay.classList.remove('active');
+            tg.HapticFeedback.impactOccurred('light');
+        });
+
+        modalCancelBtn.addEventListener('click', () => {
+            timeModalOverlay.classList.remove('active');
+            tg.HapticFeedback.impactOccurred('light');
+        });
+
+        modalClearBtn.addEventListener('click', () => {
+            selectedTime = null;
+            modalTimeInput.value = '';
+            timeSelectBtn.classList.remove('active');
+            timeModalOverlay.classList.remove('active');
+            tg.HapticFeedback.impactOccurred('light');
+        });
+
+        // Закрытие модального окна по клику вне его (на оверлей)
+        timeModalOverlay.addEventListener('click', (e) => {
+            if (e.target === timeModalOverlay) {
+                timeModalOverlay.classList.remove('active');
+                tg.HapticFeedback.impactOccurred('light');
+            }
+        });
+        
+
 
         addBtn.addEventListener('click', addTodo);
         
@@ -600,19 +808,20 @@
         clearAllBtn.addEventListener('click', clearCompleted);
 
         renderTodos();
-
-        tg.onEvent('viewportChanged', () => {
-            tg.ready();
-            // Эти параметры уже должны быть установлены при инициализации.
-            //tg.setHeaderColor(tg.themeParams.bg_color || '#ffffff');
-            //tg.setBackgroundColor(tg.themeParams.bg_color || '#ffffff');
-        });
         
-        // Добавьте это, чтобы кнопка Telegram MainButton не появлялась дважды
-        tg.onEvent('mainButtonClicked', () => {
-            // В нашем случае, MainButton используется как индикатор,
-            // но если бы она была интерактивной, здесь была бы логика.
-        });
+        // Переинтервал для проверки просроченных задач каждую минуту
+        setInterval(() => {
+            todos.forEach((todo, index) => {
+                const li = todoList.children[index];
+                if (li && !todo.completed) {
+                    if (isOverdue.call(todo, todo.dueDate)) {
+                        li.classList.add('overdue');
+                    } else {
+                        li.classList.remove('overdue');
+                    }
+                }
+            });
+        }, 60 * 1000); // Каждую минуту
     </script>
 </body>
 </html>
