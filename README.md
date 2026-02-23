@@ -1,4 +1,4 @@
-
+<Задачи>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -33,9 +33,20 @@
         body {
             background: var(--tg-theme-bg-color);
             color: var(--tg-theme-text-color);
-            min-height: 100vh;
             display: flex;
             flex-direction: column;
+            width: 100vw; /* Занимает всю ширину viewport */
+            height: 100vh; /* Занимает всю высоту viewport */
+            overflow: hidden; /* Предотвращаем скролл на body */
+        }
+
+        .main-wrapper {
+            flex: 1; /* Занимает всю доступную высоту */
+            display: flex;
+            flex-direction: column;
+            width: 100%; /* По умолчанию на мобильных - 100% ширины */
+            height: 100%; /* По умолчанию на мобильных - 100% высоты */
+            position: relative;
         }
 
         /* Контейнер для ПК */
@@ -43,17 +54,16 @@
             body {
                 align-items: center;
                 justify-content: center;
+                overflow: auto; /* Позволяем body прокручиваться, если main-wrapper меньше окна */
             }
             .main-wrapper {
-                width: 400px;
+                width: 400px; /* Ширина мобильного устройства */
                 max-width: 90vw;
-                height: 90vh;
+                height: 720px; /* Фиксированная высота для соотношения 9:16 (400*1.8) */
+                max-height: 90vh; /* Ограничиваем высоту */
                 border-radius: 20px;
                 overflow: hidden;
                 box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-                display: flex;
-                flex-direction: column;
-                position: relative;
             }
         }
         
@@ -67,6 +77,7 @@
             position: sticky; /* Sticky header */
             top: 0;
             z-index: 10;
+            flex-shrink: 0; /* Не сжимать */
         }
 
 
@@ -76,18 +87,19 @@
         }
 
         .container {
-            flex: 1;
+            flex: 1; /* Занимает всю оставшуюся высоту */
             display: flex;
             flex-direction: column;
             padding: 16px;
-            padding-bottom: 100px;
-            overflow-y: auto;
+            padding-bottom: 16px;
+            overflow-y: auto; /* Добавлено для прокрутки контента */
         }
 
         .input-wrapper {
             display: flex;
             gap: 12px;
             margin-bottom: 20px;
+            flex-shrink: 0; /* Не сжимать */
         }
 
         .input-wrapper input[type="text"] {
@@ -115,6 +127,7 @@
             align-items: center;
             justify-content: center;
             transition: transform 0.15s, opacity 0.15s;
+            flex-shrink: 0;
         }
         .time-select-btn:active {
             transform: scale(0.95);
@@ -146,6 +159,7 @@
             align-items: center;
             justify-content: center;
             transition: transform 0.15s, opacity 0.15s;
+            flex-shrink: 0;
         }
 
         .add-btn:active {
@@ -260,6 +274,11 @@
             text-align: center;
             padding: 40px 20px;
             color: var(--tg-theme-hint-color);
+           flex-grow: 1; /* Занимает доступное пространство */
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+           justify-content: center;
         }
 
         .empty-state svg {
@@ -274,7 +293,7 @@
         }
 
         .clear-all-btn {
-            margin-top: 20px;
+            margin-top: auto; /* Прижимает кнопку к низу container */
             padding: 12px 24px;
             border: none;
             border-radius: 10px;
@@ -285,6 +304,7 @@
             cursor: pointer;
             transition: opacity 0.15s;
             align-self: center;
+            flex-shrink: 0; /* Не сжимается */
         }
 
         .clear-all-btn:active {
@@ -473,7 +493,7 @@
 
             <div class="empty-state" id="empty-state" style="display: none;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>
                 </svg>
                 <p>Ещё нет задач. Самое время добавить первую!</p>
             </div>
@@ -501,10 +521,17 @@
         tg.expand();
         tg.ready();
 
-        tg.setHeaderColor(tg.themeParams.bg_color || '#ffffff');
+        tg.setHeaderColor(tg.themeParams.header_bg_color || '#f5f5f5'); // Используем цвет из заголовка
         tg.setBackgroundColor(tg.themeParams.bg_color || '#ffffff');
         tg.MainButton.textColor = tg.themeParams.button_text_color || '#ffffff';
         tg.MainButton.color = tg.themeParams.button_color || '#2481cc';
+
+        // Добавим обработчик на изменение размеров viewport, чтобы Mini App расширялось, если требуется
+        tg.viewport.onEvent('viewportChanged', () => {
+            if (!tg.viewport.isExpanded) {
+                tg.viewport.expand();
+            }
+        });
 
         if (tg.themeParams) {
             const root = document.documentElement;
