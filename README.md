@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -45,9 +44,9 @@
                 justify-content: center;
             }
             .main-wrapper {
-                width: 360px; /* Ширина мобильного устройства */
+                width: 400px; /* Увеличил ширину на ПК */
                 max-width: 90vw;
-                height: 80vh; /* Отношение 9:16 */
+                height: 90vh; /* Увеличил высоту */
                 border-radius: 20px;
                 overflow: hidden;
                 box-shadow: 0 10px 30px rgba(0,0,0,0.1);
@@ -56,275 +55,300 @@
                 position: relative;
             }
         }
-        /* Стили существующего кода */
-.header {
-    background: var(--tg-theme-header-bg-color);
-    padding: 16px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid rgba(0,0,0,0.08);
-}
+        /* Стили существующего кода (оставлены почти без изменений) */
+        .header {
+            background: var(--tg-theme-header-bg-color);
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
+        }
 
-.header h1 {
-    font-size: 20px;
-    font-weight: 600;
-}
+        .header h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
 
-.stats {
-    font-size: 13px;
-    color: var(--tg-theme-hint-color);
-}
+        .stats {
+            font-size: 13px;
+            color: var(--tg-theme-hint-color);
+        }
 
-.container {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 16px;
-    padding-bottom: 100px;
-}
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 16px;
+            padding-bottom: 100px;
+            overflow-y: auto; /* Добавлено для прокрутки контента */
+        }
 
-.input-wrapper {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 20px;
-}
+        .input-wrapper {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
 
-.input-wrapper input {
-    flex: 1;
-    padding: 14px 16px;
-    border: none;
-    border-radius: 12px;
-    background: var(--tg-theme-secondary-bg-color);
-    color: var(--tg-theme-text-color);
-    font-size: 16px;
-    outline: none;
-    transition: box-shadow 0.2s;
-}
+        .input-wrapper input {
+            flex: 1;
+            padding: 14px 16px;
+            border: none;
+            border-radius: 12px;
+            background: var(--tg-theme-secondary-bg-color);
+            color: var(--tg-theme-text-color);
+            font-size: 16px;
+            outline: none;
+            transition: box-shadow 0.2s;
+        }
 
-.input-wrapper input::placeholder {
-    color: var(--tg-theme-hint-color);
-}
+        .input-wrapper input::placeholder {
+            color: var(--tg-theme-hint-color);
+        }
 
-.input-wrapper input:focus {
-    box-shadow: 0 0 0 2px var(--tg-theme-button-color);
-}
+        .input-wrapper input:focus {
+            box-shadow: 0 0 0 2px var(--tg-theme-button-color);
+        }
 
-.add-btn {
-    width: 50px;
-    height: 50px;
-    border: none;
-    border-radius: 12px;
-    background: var(--tg-theme-button-color);
-    color: var(--tg-theme-button-text-color);
-    font-size: 24px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.15s, opacity 0.15s;
-}
+        .add-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 12px;
+            background: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.15s, opacity 0.15s;
+        }
 
-.add-btn:active {
-    transform: scale(0.95);
-    opacity: 0.8;
-}
+        .add-btn:active {
+            transform: scale(0.95);
+            opacity: 0.8;
+        }
 
-.todo-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
+        .todo-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
 
-.todo-item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 14px 16px;
-    background: var(--tg-theme-secondary-bg-color);
-    border-radius: 12px;
-    transition: transform 0.15s, opacity 0.15s;
-    position: relative; /* Для конфетти */
-}
+        .todo-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 16px;
+            background: var(--tg-theme-secondary-bg-color);
+            border-radius: 12px;
+            transition: transform 0.15s, opacity 0.15s;
+            position: relative; /* Для конфетти и похвалы */
+        }
 
-.todo-item.completed .todo-text {
-    text-decoration: line-through;
-    color: var(--tg-theme-hint-color);
-}
+        .todo-item.completed .todo-text {
+            text-decoration: line-through;
+            color: var(--tg-theme-hint-color);
+        }
 
-.todo-item.completed .checkbox {
-    background: var(--tg-theme-button-color);
-    border-color: var(--tg-theme-button-color);
-}
+        .todo-item.completed .checkbox {
+            background: var(--tg-theme-button-color);
+            border-color: var(--tg-theme-button-color);
+        }
 
-.todo-item.completed .checkbox::after {
-    opacity: 1;
-}
+        .todo-item.completed .checkbox::after {
+            opacity: 1;
+        }
 
-.todo-item.removing {
-    transform: translateX(-100%);
-    opacity: 0;
-}
+        .todo-item.removing {
+            transform: translateX(-100%);
+            opacity: 0;
+        }
 
-.checkbox {
-    width: 24px;
-    height: 24px;
-    border: 2px solid var(--tg-theme-hint-color);
-    border-radius: 6px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    transition: all 0.2s;
-    position: relative;
-    z-index: 1;
-}
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--tg-theme-hint-color);
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+            position: relative;
+            z-index: 1;
+        }
 
-.checkbox::after {
-    content: '✓';
-    color: white;
-    font-size: 14px;
-    font-weight: bold;
-    opacity: 0;
-    transition: opacity 0.2s;
-}
+        .checkbox::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
 
-.todo-text {
-    flex: 1;
-    font-size: 16px;
-    word-break: break-word;
-}
-/* Стили для времени выполнения задачи */
-.todo-due-date {
-    font-size: 13px;
-    color: var(--tg-theme-hint-color);
-    margin-left: auto; /* Прижимает к правому краю */
-    flex-shrink: 0;
-    padding-left: 8px;
-}
+        .todo-text {
+            flex: 1;
+            font-size: 16px;
+            word-break: break-word;
+        }
 
-.delete-btn {
-    width: 32px;
-    height: 32px;
-    border: none;
-    border-radius: 8px;
-    background: transparent;
-    color: var(--tg-theme-destructive-bg-color);
-    font-size: 18px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0.6;
-    transition: opacity 0.15s;
-}
+        .todo-due-date {
+            font-size: 13px;
+            color: var(--tg-theme-hint-color);
+            margin-left: auto;
+            flex-shrink: 0;
+            padding-left: 8px;
+        }
 
-.delete-btn:hover {
-    opacity: 1;
-}
+        .delete-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--tg-theme-destructive-bg-color);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.6;
+            transition: opacity 0.15s;
+        }
 
-.empty-state {
-    text-align: center;
-    padding: 40px 20px;
-    color: var(--tg-theme-hint-color);
-}
+        .delete-btn:hover {
+            opacity: 1;
+        }
 
-.empty-state svg {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 16px;
-    opacity: 0.5;
-}
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--tg-theme-hint-color);
+        }
 
-.empty-state p {
-    font-size: 15px;
-}
+        .empty-state svg {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
 
-.clear-all-btn {
-    margin-top: 20px;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 10px;
-    background: var(--tg-theme-destructive-bg-color);
-    color: white;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: opacity 0.15s;
-    align-self: center; /* Центрируем кнопку */
-}
+        .empty-state p {
+            font-size: 15px;
+        }
 
-.clear-all-btn:active {
-    opacity: 0.8;
-}
+        .clear-all-btn {
+            margin-top: 20px;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            background: var(--tg-theme-destructive-bg-color);
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.15s;
+            align-self: center;
+        }
 
-/* Анимации */
-@keyframes slideIn {
-    from {
-        transform: translateY(-10px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
+        .clear-all-btn:active {
+            opacity: 0.8;
+        }
 
-.todo-item.new-item {
-    animation: slideIn 0.3s ease-out;
-}
+        /* Анимации */
+        @keyframes slideIn {
+            from {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
 
-/* Анимация конфетти */
-@keyframes confetti-fall {
-    0% { transform: translate(-50%, -50%) rotate(0deg); opacity: 1; }
-    100% { transform: translate(-50%, 1000%) rotate(720deg); opacity: 0; }
-}
+        .todo-item.new-item {
+            animation: slideIn 0.3s ease-out;
+        }
 
-.confetti {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background-color: var(--color);
-    border-radius: 50%;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    animation: confetti-fall 3s forwards;
-    pointer-events: none;
-    z-index: 0;
-}
+        /* Более резкое конфетти */
+        @keyframes confetti-fade-out {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+            50% { opacity: 1; transform: translate(-50%, -150%) scale(1.2) rotate(180deg); } /* Подлетает вверх */
+            100% { opacity: 0; transform: translate(-50%, -250%) scale(0.5) rotate(360deg); } /* Исчезает вверху */
+        }
+        @keyframes confetti-fall-fast {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(150px) rotate(360deg); opacity: 0; }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 8px; /* Увеличил размер */
+            height: 8px; /* Увеличил размер */
+            background-color: var(--color);
+            border-radius: 50%;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: confetti-fall-fast 0.8s forwards ease-out; /* Более быстрая анимация */
+            pointer-events: none;
+            z-index: 2; /* Над элементами */
+            will-change: transform, opacity; /* Для оптимизации анимации */
+        }
+        .confetti-praise {
+            position: absolute;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--tg-theme-button-color); /* Или другой яркий цвет */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: praise-fade-out 1.5s forwards ease-out;
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 2;
+            text-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        @keyframes praise-fade-out {
+            0% { opacity: 0; transform: translate(-50%, 0px) scale(0.8); }
+            10% { opacity: 1; transform: translate(-50%, -20px) scale(1.1); }
+            100% { opacity: 0; transform: translate(-50%, -70px) scale(1); }
+        }
 
 
-/* Тёмная тема */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --tg-theme-bg-color: #1c1c1e;
-        --tg-theme-secondary-bg-color: #2c2c2e;
-        --tg-theme-text-color: #ffffff;
-        --tg-theme-hint-color: #8e8e93;
-        --tg-theme-button-color: #0a84ff;
-        --tg-theme-button-text-color: #ffffff;
-        --tg-theme-destructive-bg-color: #ff453a;
-        --tg-theme-header-bg-color: #1c1c1e;
-    }
-}
+        /* Тёмная тема */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --tg-theme-bg-color: #1c1c1e;
+                --tg-theme-secondary-bg-color: #2c2c2e;
+                --tg-theme-text-color: #ffffff;
+                --tg-theme-hint-color: #8e8e93;
+                --tg-theme-button-color: #0a84ff;
+                --tg-theme-button-text-color: #ffffff;
+                --tg-theme-destructive-bg-color: #ff453a;
+                --tg-theme-header-bg-color: #1c1c1e;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="main-wrapper">
         <div class="header">
-            <!-- Заголовок убран -->
             <div class="stats">
-                <span id="completed-count">0</span>/<span id="total-count">0</span>
+                Завершено: <span id="completed-count">0</span> из <span id="total-count">0</span>
             </div>
         </div>
 
         <div class="container">
             <div class="input-wrapper">
                 <input type="text" id="todo-input" placeholder="Новая задача..." maxlength="200">
-                <input type="datetime-local" id="due-date-input" style="display: none;"> <!-- Скрытый input для даты -->
+                <input type="datetime-local" id="due-date-input"> <!-- Сделал видимым -->
                 <button class="add-btn" id="add-btn">+</button>
             </div>
 
@@ -334,7 +358,7 @@
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                     <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                <p>Нет текущих задач</p>
+                <p>Ещё нет задач. Самое время добавить первую!</p>
             </div>
 
             <button class="clear-all-btn" id="clear-all-btn" style="display: none;">Очистить завершенные</button>
@@ -346,6 +370,10 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.ready();
+
+        // Устанавливаем заголовок страницы (будет отображаться в адресной строке)
+        tg.setHeaderColor(tg.themeParams.bg_color || '#ffffff'); // Применяем цвет фона к заголовку
+        tg.setBackgroundColor(tg.themeParams.bg_color || '#ffffff'); // Устанавливаем цвет фона
 
         if (tg.themeParams) {
             const root = document.documentElement;
@@ -368,12 +396,15 @@
         const completedCountEl = document.getElementById('completed-count');
         const totalCountEl = document.getElementById('total-count');
 
+        const praises = ["Так держать!", "Молодец!", "Отличная работа!", "Супер!", "Продолжай в том же духе!"];
+
         let todos = JSON.parse(localStorage.getItem('telegram-todo-list') || '[]');
 
         function saveTodos() {
             localStorage.setItem('telegram-todo-list', JSON.stringify(todos));
             updateStats();
             updateClearAllButtonVisibility();
+            updateMiniAppTitle(); // Обновляем заголовок Mini App
         }
 
         function updateStats() {
@@ -381,6 +412,18 @@
             completedCountEl.textContent = completed;
             totalCountEl.textContent = todos.length;
         }
+
+        function updateMiniAppTitle() {
+            const completed = todos.filter(t => t.completed).length;
+            const total = todos.length;
+            if (total > 0) {
+                tg.MainButton.text = `Выполнено: ${completed}/${total}`;
+                tg.MainButton.show();
+            } else {
+                tg.MainButton.hide();
+            }
+        }
+
 
         function updateClearAllButtonVisibility() {
             clearAllBtn.style.display = todos.some(t => t.completed) ? 'block' : 'none';
@@ -395,7 +438,7 @@
         function createTodoElement(todo, index) {
             const li = document.createElement('li');
             li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
-            li.dataset.index = index; // Используем data-index для связи с массивом
+            li.dataset.index = index;
             li.innerHTML = `
                 <div class="checkbox" data-index="${index}"></div>
                 <span class="todo-text">${escapeHtml(todo.text)}</span>
@@ -406,11 +449,10 @@
         }
 
         function renderTodos() {
-            todoList.innerHTML = ''; // Очищаем полностью при начальном рендере
+            todoList.innerHTML = '';
             
             if (todos.length === 0) {
                 emptyState.style.display = 'block';
-                clearAllBtn.style.display = 'none';
             } else {
                 emptyState.style.display = 'none';
                 todos.forEach((todo, index) => {
@@ -419,6 +461,7 @@
             }
             updateStats();
             updateClearAllButtonVisibility();
+            updateMiniAppTitle();
         }
 
         function addTodo() {
@@ -429,10 +472,10 @@
             const newTodo = { text, completed: false, dueDate };
             todos.push(newTodo);
             todoInput.value = '';
-            dueDateInput.value = ''; // Очищаем поле даты
+            dueDateInput.value = '';
             saveTodos();
             
-            renderTodos(); // Перерисовываем весь список после добавления для простоты, т.к. "дерганье" уже не проблема из-за оптимизации
+            renderTodos();
 
             const newItem = todoList.lastElementChild;
             if (newItem) {
@@ -453,8 +496,8 @@
             }
             
             if (todos[index].completed) {
-                // Вызываем конфетти
                 triggerConfetti(todoItem.querySelector('.checkbox'));
+                triggerPraise(todoItem.querySelector('.checkbox'));
                 tg.HapticFeedback.notificationOccurred('success');
             } else {
                 tg.HapticFeedback.impactOccurred('light');
@@ -471,9 +514,9 @@
                 setTimeout(() => {
                     todos.splice(index, 1);
                     saveTodos();
-                    renderTodos(); // Перерисовываем, чтобы индексы обновились
+                    renderTodos();
                     tg.HapticFeedback.impactOccurred('medium');
-                }, 300); // Соответствует длительности CSS-анимации
+                }, 300);
             }
         }
 
@@ -491,25 +534,47 @@
 
         function triggerConfetti(targetElement) {
             const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800', '#FF5722'];
-            const numberOfConfetti = 30;
-
+            const numberOfConfetti = 20; // Уменьшил количество для лучшей производительности
+            
             const rect = targetElement.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
+            const startX = rect.left + rect.width / 2;
+            const startY = rect.top + rect.height / 2;
 
             for (let i = 0; i < numberOfConfetti; i++) {
                 const confetti = document.createElement('div');
                 confetti.classList.add('confetti');
                 confetti.style.setProperty('--color', colors[Math.floor(Math.random() * colors.length)]);
-                confetti.style.left = `${centerX + (Math.random() - 0.5) * 20}px`; // Разброс вокруг кнопки
-                confetti.style.top = `${centerY + (Math.random() - 0.5) * 20}px`;
-                confetti.style.animationDelay = `${Math.random() * 0.5}s`;
+                confetti.style.left = `${startX}px`;
+                confetti.style.top = `${startY}px`;
+                confetti.style.animationDelay = `${Math.random() * 0.2}s`; // Уменьшил задержку
+                // Задаем случайное направление для разлета
+                const angle = Math.random() * Math.PI * 2; // От 0 до 2*PI
+                const distance = Math.random() * 50 + 20; // От 20 до 70px
+                confetti.style.setProperty('--travelX', `${Math.cos(angle) * distance}px`);
+                confetti.style.setProperty('--travelY', `${Math.sin(angle) * distance}px`);
+
                 document.body.appendChild(confetti);
 
                 confetti.addEventListener('animationend', () => {
                     confetti.remove();
                 });
             }
+        }
+        function triggerPraise(targetElement) {
+            const praiseText = praises[Math.floor(Math.random() * praises.length)];
+            const praiseElement = document.createElement('div');
+            praiseElement.classList.add('confetti-praise');
+            praiseElement.textContent = praiseText;
+            
+            const rect = targetElement.getBoundingClientRect();
+            praiseElement.style.left = `${rect.left + rect.width / 2}px`;
+            praiseElement.style.top = `${rect.top + rect.height / 2}px`;
+            
+            document.body.appendChild(praiseElement);
+
+            praiseElement.addEventListener('animationend', () => {
+                praiseElement.remove();
+            });
         }
 
 
@@ -538,6 +603,15 @@
 
         tg.onEvent('viewportChanged', () => {
             tg.ready();
+            // Эти параметры уже должны быть установлены при инициализации.
+            //tg.setHeaderColor(tg.themeParams.bg_color || '#ffffff');
+            //tg.setBackgroundColor(tg.themeParams.bg_color || '#ffffff');
+        });
+        
+        // Добавьте это, чтобы кнопка Telegram MainButton не появлялась дважды
+        tg.onEvent('mainButtonClicked', () => {
+            // В нашем случае, MainButton используется как индикатор,
+            // но если бы она была интерактивной, здесь была бы логика.
         });
     </script>
 </body>
