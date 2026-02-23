@@ -1,4 +1,3 @@
-<Задачи>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
@@ -17,8 +16,6 @@
             --tg-theme-button-text-color: #ffffff;
             --tg-theme-destructive-bg-color: #ff3b30;
             --tg-theme-header-bg-color: #f5f5f5;
-            --tg-viewport-height: 100vh;
-            --tg-viewport-width: 100vw;
         }
 
         /* Общие сбросы и стили */
@@ -35,17 +32,17 @@
             color: var(--tg-theme-text-color);
             display: flex;
             flex-direction: column;
-            width: 100vw; /* Занимает всю ширину viewport */
-            height: 100vh; /* Занимает всю высоту viewport */
+            width: 100vw;
+            height: 100vh;
             overflow: hidden; /* Предотвращаем скролл на body */
         }
 
         .main-wrapper {
-            flex: 1; /* Занимает всю доступную высоту */
+            flex: 1;
             display: flex;
             flex-direction: column;
-            width: 100%; /* По умолчанию на мобильных - 100% ширины */
-            height: 100%; /* По умолчанию на мобильных - 100% высоты */
+            width: 100%;
+            height: 100%;
             position: relative;
         }
 
@@ -54,12 +51,13 @@
             body {
                 align-items: center;
                 justify-content: center;
-                overflow: auto; /* Позволяем body прокручиваться, если main-wrapper меньше окна */
+                overflow: auto;
             }
             .main-wrapper {
                 width: 400px; /* Ширина мобильного устройства */
                 max-width: 90vw;
-                height: 720px; /* Фиксированная высота для соотношения 9:16 (400*1.8) */
+                /* Соотношение 16:9 при ширине 400px = 225px (высота) * 16/9. Или 400px * 16/9 = 711px*/
+                height: calc(400px * 16 / 9); /* Пробую динамическую высоту для 16:9 */
                 max-height: 90vh; /* Ограничиваем высоту */
                 border-radius: 20px;
                 overflow: hidden;
@@ -77,9 +75,8 @@
             position: sticky; /* Sticky header */
             top: 0;
             z-index: 10;
-            flex-shrink: 0; /* Не сжимать */
+            flex-shrink: 0;
         }
-
 
         .stats {
             font-size: 13px;
@@ -87,19 +84,19 @@
         }
 
         .container {
-            flex: 1; /* Занимает всю оставшуюся высоту */
+            flex: 1;
             display: flex;
             flex-direction: column;
             padding: 16px;
             padding-bottom: 16px;
-            overflow-y: auto; /* Добавлено для прокрутки контента */
+            overflow-y: auto;
         }
 
         .input-wrapper {
             display: flex;
             gap: 12px;
             margin-bottom: 20px;
-            flex-shrink: 0; /* Не сжимать */
+            flex-shrink: 0;
         }
 
         .input-wrapper input[type="text"] {
@@ -113,7 +110,6 @@
             outline: none;
             transition: box-shadow 0.2s;
         }
-        /* Стили для кнопки выбора времени */
         .time-select-btn {
             width: 50px;
             height: 50px;
@@ -136,7 +132,6 @@
         .time-select-btn.active {
             box-shadow: 0 0 0 2px var(--tg-theme-button-color); /* Выделение активной кнопки */
         }
-
 
         .input-wrapper input::placeholder {
             color: var(--tg-theme-hint-color);
@@ -183,15 +178,14 @@
             border-radius: 12px;
             transition: transform 0.15s, opacity 0.15s, background 0.2s;
             position: relative;
+            will-change: transform, opacity; /* Оптимизация анимации */
         }
-        /* Стиль для просроченных задач */
         .todo-item.overdue {
             background-color: var(--tg-theme-destructive-bg-color);
         }
         .todo-item.overdue .todo-text, .todo-item.overdue .todo-due-date {
             color: white;
         }
-
 
         .todo-item.completed .todo-text {
             text-decoration: line-through;
@@ -293,7 +287,7 @@
         }
 
         .clear-all-btn {
-            margin-top: auto; /* Прижимает кнопку к низу container */
+            margin-top: auto;
             padding: 12px 24px;
             border: none;
             border-radius: 10px;
@@ -304,7 +298,7 @@
             cursor: pointer;
             transition: opacity 0.15s;
             align-self: center;
-            flex-shrink: 0; /* Не сжимается */
+            flex-shrink: 0;
         }
 
         .clear-all-btn:active {
@@ -327,22 +321,23 @@
             animation: slideIn 0.3s ease-out;
         }
 
-        /* Анимация конфетти (палочки) */
-        @keyframes confetti-spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); opacity: 1; }
-            100% { transform: translate(var(--travelX), var(--travelY)) rotate(720deg) scale(0); opacity: 0; }
+        /* Анимация конфетти (КРУГЛЫЕ) */
+        @keyframes confetti-fall-round {
+            0% { transform: scale(0) translate(0, 0); opacity: 1; }
+            50% { transform: scale(1) translate(var(--travelX), var(--travelY)); opacity: 1; }
+            100% { transform: scale(0.2) translate(var(--travelX), var(--travelY-end)); opacity: 0; }
         }
 
         .confetti {
             position: absolute;
-            width: 4px; /* Ширина палочки */
-            height: 12px; /* Длина палочки */
+            width: 8px; /* Размер кружка */
+            height: 8px;
             background-color: var(--color);
-            border-radius: 2px; /* Закругленные концы */
-            animation: confetti-spin 1.2s forwards cubic-bezier(0.2, 1, 0.7, 1); /* Мягкое исчезание */
+            border-radius: 50%;
+            animation: confetti-fall-round 1.5s forwards ease-out; /* Увеличил время для плавности */
             pointer-events: none;
-            z-index: 2;
-            transform-origin: center;
+            z-index: 20; /* Выше других элементов */
+            will-change: transform, opacity; /* Оптимизация анимации */
         }
         .confetti-praise {
             position: absolute;
@@ -355,8 +350,9 @@
             animation: praise-fade-out 1.5s forwards ease-out;
             pointer-events: none;
             white-space: nowrap;
-            z-index: 2;
+            z-index: 20; /* Выше других элементов */
             text-shadow: 0 0 5px rgba(0,0,0,0.1);
+            will-change: transform, opacity; /* Оптимизация анимации */
         }
         @keyframes praise-fade-out {
             0% { opacity: 0; transform: translate(-50%, 0px) scale(0.8); }
@@ -371,16 +367,17 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.4); /* Полупрозрачный черный фон */
-            backdrop-filter: blur(8px); /* Эффект размытия */
-            -webkit-backdrop-filter: blur(8px); /* Для Safari */
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 100;
+            z-index: 100; /* Самый высокий z-index */
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.2s ease-out;
+            will-change: opacity; /* Оптимизация анимации */
         }
         .modal-overlay.active {
             opacity: 1;
@@ -396,6 +393,7 @@
             transform: translateY(20px);
             opacity: 0;
             transition: transform 0.2s ease-out, opacity 0.2s ease-out;
+            will-change: transform, opacity; /* Оптимизация анимации */
         }
         .modal-overlay.active .modal-content {
             transform: translateY(0);
@@ -416,10 +414,9 @@
             color: var(--tg-theme-text-color);
             font-size: 16px;
             margin-bottom: 20px;
-            -webkit-appearance: none; /* Убираем стандартные стили для вебкит-браузеров */
+            -webkit-appearance: none;
             outline: none;
         }
-        /* Стиль для кастомного appearance на iOS */
         @supports (-webkit-overflow-scrolling: touch) {
             .modal-content input[type="time"] {
                 padding: 12px;
@@ -493,9 +490,9 @@
 
             <div class="empty-state" id="empty-state" style="display: none;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>
+                    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                <p>Ещё нет задач. Самое время добавить первую!</p>
+                <p>Ваш список дел пуст. Добавьте задачу!</p>
             </div>
 
             <button class="clear-all-btn" id="clear-all-btn" style="display: none;">Очистить завершенные</button>
@@ -521,12 +518,11 @@
         tg.expand();
         tg.ready();
 
-        tg.setHeaderColor(tg.themeParams.header_bg_color || '#f5f5f5'); // Используем цвет из заголовка
+        tg.setHeaderColor(tg.themeParams.header_bg_color || '#f5f5f5');
         tg.setBackgroundColor(tg.themeParams.bg_color || '#ffffff');
         tg.MainButton.textColor = tg.themeParams.button_text_color || '#ffffff';
         tg.MainButton.color = tg.themeParams.button_color || '#2481cc';
 
-        // Добавим обработчик на изменение размеров viewport, чтобы Mini App расширялось, если требуется
         tg.viewport.onEvent('viewportChanged', () => {
             if (!tg.viewport.isExpanded) {
                 tg.viewport.expand();
@@ -554,16 +550,14 @@
         const completedCountEl = document.getElementById('completed-count');
         const totalCountEl = document.getElementById('total-count');
 
-        // Модальное окно
         const timeModalOverlay = document.getElementById('time-modal-overlay');
         const modalTimeInput = document.getElementById('modal-time-input');
         const modalOkBtn = document.getElementById('modal-ok-btn');
         const modalCancelBtn = document.getElementById('modal-cancel-btn');
         const modalClearBtn = document.getElementById('modal-clear-btn');
-        let selectedTime = null; // Для хранения выбранного времени
+        let selectedTime = null;
 
-
-        const praises = ["Так держать!", "Молодец!", "Отличная работа!", "Супер!", "Продолжай в том же духе!"];
+        const praises = ["Так держать!", "Молодец!", "Отличная работа!", "Супер!", "Продолжай в том же духе!", "Браво!"];
 
         let todos = JSON.parse(localStorage.getItem('telegram-todo-list') || '[]');
 
@@ -584,13 +578,12 @@
             const completed = todos.filter(t => t.completed).length;
             const total = todos.length;
             if (total > 0) {
-                tg.MainButton.setText(`Завершено: ${completed}/${total} задач`);
+                tg.MainButton.setText(`Выполнено: ${completed}/${total}`); // Убрал "задач"
                 tg.MainButton.show();
             } else {
                 tg.MainButton.hide();
             }
         }
-
 
         function updateClearAllButtonVisibility() {
             clearAllBtn.style.display = todos.some(t => t.completed) ? 'block' : 'none';
@@ -601,7 +594,7 @@
             div.textContent = text;
             return div.innerHTML;
         }
-
+        
         function isOverdue(dueDate) {
             if (!dueDate) return false;
             const now = new Date();
@@ -609,7 +602,6 @@
             // Если задача не выполнена и время просрочено
             return !this.completed && due <= now;
         }
-
 
         function createTodoElement(todo, index) {
             const li = document.createElement('li');
@@ -628,7 +620,7 @@
             todoList.innerHTML = '';
             
             if (todos.length === 0) {
-                emptyState.style.display = 'block';
+                emptyState.style.display = 'flex'; // empty-state display flex для центрирования
             } else {
                 emptyState.style.display = 'none';
                 todos.forEach((todo, index) => {
@@ -647,8 +639,8 @@
             const newTodo = { text, completed: false, dueDate: selectedTime };
             todos.push(newTodo);
             todoInput.value = '';
-            selectedTime = null; // Сброс выбранного времени
-            timeSelectBtn.classList.remove('active'); // Убираем выделение кнопки времени
+            selectedTime = null;
+            timeSelectBtn.classList.remove('active');
             saveTodos();
             
             renderTodos();
@@ -669,7 +661,7 @@
             const todoItem = todoList.children[index];
             if (todoItem) {
                 todoItem.classList.toggle('completed', todos[index].completed);
-                todoItem.classList.remove('overdue'); // Убираем просроченность, если задача выполнена
+                todoItem.classList.remove('overdue');
             }
             
             if (todos[index].completed) {
@@ -678,7 +670,6 @@
                 tg.HapticFeedback.notificationOccurred('success');
             } else {
                 tg.HapticFeedback.impactOccurred('light');
-                // При снятии галочки, переоцениваем overdue статус
                 if (isOverdue.call(todos[index], todos[index].dueDate)) {
                     todoItem.classList.add('overdue');
                 }
@@ -713,11 +704,10 @@
             return date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
         }
 
-
         function triggerConfetti(targetElement) {
             const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4CAF50', '#8BC34A', '#CDDC39', '#FFEB3B', '#FFC107', '#FF9800', '#FF5722'];
-            const numberOfConfetti = 30; // Увеличил количество палочек
-            
+            const numberOfConfetti = 15; // Уменьшил количество конфетти
+
             const rect = targetElement.getBoundingClientRect();
             const startX = rect.left + rect.width / 2;
             const startY = rect.top + rect.height / 2;
@@ -727,20 +717,21 @@
                 confetti.classList.add('confetti');
                 confetti.style.setProperty('--color', colors[Math.floor(Math.random() * colors.length)]);
                 
-                // Случайное смещение от центра кнопки
-                const offsetX = (Math.random() - 0.5) * 20; 
-                const offsetY = (Math.random() - 0.5) * 20;
+                const offsetX = (Math.random() - 0.5) * 10; 
+                const offsetY = (Math.random() - 0.5) * 10;
 
                 confetti.style.left = `${startX + offsetX}px`;
                 confetti.style.top = `${startY + offsetY}px`;
 
-                confetti.style.animationDelay = `${Math.random() * 0.4}s`; // Задержка
+                confetti.style.animationDelay = `${Math.random() * 0.2}s`;
                 
-                // Случайный разлет в стороны
                 const angle = Math.random() * Math.PI * 2;
-                const distance = Math.random() * 80 + 30; // От 30 до 110px
+                const distance = Math.random() * 60 + 20; // Меньшая дальность разлета
                 confetti.style.setProperty('--travelX', `${Math.cos(angle) * distance}px`);
                 confetti.style.setProperty('--travelY', `${Math.sin(angle) * distance}px`);
+                // Добавим чтобы конфетти не просто разлетались, но и опускались вниз
+                confetti.style.setProperty('--travelY-end', `${(Math.sin(angle) * distance) + 50}px`);
+
 
                 document.body.appendChild(confetti);
 
@@ -766,22 +757,19 @@
             });
         }
 
-        // Обработчики событий для модального окна времени
         timeSelectBtn.addEventListener('click', () => {
             timeModalOverlay.classList.add('active');
-            // Устанавливаем текущее время или ранее выбранное
             modalTimeInput.value = selectedTime ? new Date(selectedTime).toLocaleTimeString('ru', {hour: '2-digit', minute: '2-digit'}) : '';
             tg.HapticFeedback.impactOccurred('light');
         });
 
         modalOkBtn.addEventListener('click', () => {
             if (modalTimeInput.value) {
-                // Извлекаем только время и привязываем его к текущей дате
                 const now = new Date();
                 const [hours, minutes] = modalTimeInput.value.split(':').map(Number);
                 now.setHours(hours, minutes, 0, 0);
-                selectedTime = now.toISOString(); // Сохраняем как ISO строку
-                timeSelectBtn.classList.add('active'); // Выделяем кнопку, что время выбрано
+                selectedTime = now.toISOString();
+                timeSelectBtn.classList.add('active');
             } else {
                 selectedTime = null;
                 timeSelectBtn.classList.remove('active');
@@ -803,7 +791,6 @@
             tg.HapticFeedback.impactOccurred('light');
         });
 
-        // Закрытие модального окна по клику вне его (на оверлей)
         timeModalOverlay.addEventListener('click', (e) => {
             if (e.target === timeModalOverlay) {
                 timeModalOverlay.classList.remove('active');
@@ -811,8 +798,6 @@
             }
         });
         
-
-
         addBtn.addEventListener('click', addTodo);
         
         todoInput.addEventListener('keypress', (e) => {
@@ -836,7 +821,6 @@
 
         renderTodos();
         
-        // Переинтервал для проверки просроченных задач каждую минуту
         setInterval(() => {
             todos.forEach((todo, index) => {
                 const li = todoList.children[index];
@@ -848,7 +832,7 @@
                     }
                 }
             });
-        }, 60 * 1000); // Каждую минуту
+        }, 60 * 1000);
     </script>
 </body>
 </html>
