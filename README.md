@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Выбери два</title>
+    <title>Выбор</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -25,24 +25,6 @@
         .container {
             width: 100%;
             max-width: 400px;
-        }
-
-        .title {
-            text-align: center;
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            background: linear-gradient(90deg, #6c5ce7, #a29bfe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .subtitle {
-            text-align: center;
-            font-size: 14px;
-            color: #8e8e93;
-            margin-bottom: 32px;
         }
 
         .options {
@@ -125,13 +107,14 @@
         }
 
         .status-text {
-            font-size: 14px;
+            font-size: 16px;
             color: #a29bfe;
         }
 
         .status-count {
             font-weight: 700;
             color: #6c5ce7;
+            font-size: 20px;
         }
 
         @keyframes pulse {
@@ -146,9 +129,6 @@
 </head>
 <body>
     <div class="container">
-        <h1 class="title">Выбери два</h1>
-        <p class="subtitle">Можно активировать только 2 опции</p>
-        
         <div class="options">
             <div class="option" id="option1">
                 <span class="option-label">Натурал</span>
@@ -167,7 +147,7 @@
             </div>
             
             <div class="option" id="option3">
-                <span class="option-label">Маленькая залупа</span>
+                <span class="option-label">Большая залупа</span>
                 <label class="toggle">
                     <input type="checkbox" id="toggle3">
                     <span class="toggle-slider"></span>
@@ -176,7 +156,7 @@
         </div>
 
         <div class="status">
-            <p class="status-text">Активно: <span class="status-count" id="count">0</span> / 2</p>
+            <p class="status-text">Выбрано: <span class="status-count" id="count">0</span> / 3</p>
         </div>
     </div>
 
@@ -198,20 +178,20 @@
 
         const countEl = document.getElementById('count');
 
-        function getActiveIndices() {
-            return toggles
-                .map((t, i) => t.checked ? i : -1)
-                .filter(i => i !== -1);
-        }
+        // Хранит порядок активации ползунков
+        let activeOrder = [];
 
         function updateUI() {
-            const active = getActiveIndices();
+            // Показываем только последние 2 активированных
+            const active = activeOrder.slice(-2);
             
             options.forEach((opt, i) => {
-                if (toggles[i].checked) {
+                if (active.includes(i)) {
                     opt.classList.add('active');
+                    toggles[i].checked = true;
                 } else {
                     opt.classList.remove('active');
+                    toggles[i].checked = false;
                 }
             });
 
@@ -220,18 +200,27 @@
 
         toggles.forEach((toggle, index) => {
             toggle.addEventListener('change', (e) => {
-                const active = getActiveIndices();
-                
                 if (e.target.checked) {
-                    if (active.length > 2) {
-                        const firstActive = active[0];
+                    // Добавляем в конец очереди
+                    activeOrder.push(index);
+                    
+                    // Если активировано больше 2, убираем первый (предпоследний выбранный)
+                    if (activeOrder.length > 2) {
+                        const removedIndex = activeOrder[0];
                         
-                        options[firstActive].classList.add('deactivating');
+                        options[removedIndex].classList.add('deactivating');
                         setTimeout(() => {
-                            options[firstActive].classList.remove('deactivating');
+                            options[removedIndex].classList.remove('deactivating');
                         }, 300);
                         
-                        toggles[firstActive].checked = false;
+                        // Убираем первый элемент
+                        activeOrder.shift();
+                    }
+                } else {
+                    // При ручном выключении - убираем из очереди
+                    const idx = activeOrder.indexOf(index);
+                    if (idx > -1) {
+                        activeOrder.splice(idx, 1);
                     }
                 }
                 
@@ -244,4 +233,3 @@
     </script>
 </body>
 </html>
-
