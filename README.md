@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Выбор</title>
+    <title>Выбери два</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -12,8 +12,12 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(180deg, #1c1c1e 0%, #2c2c2e 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(74, 78, 200, 0.25) 0%, transparent 50%),
+                radial-gradient(ellipse at 40% 40%, rgba(139, 92, 246, 0.15) 0%, transparent 60%),
+                linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -27,6 +31,26 @@
             max-width: 400px;
         }
 
+        .title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff 0%, #a78bfa 50%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(167, 139, 250, 0.3);
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 32px;
+            font-weight: 400;
+        }
+
         .options {
             display: flex;
             flex-direction: column;
@@ -34,31 +58,50 @@
         }
 
         .option {
-            background: #3a3a3c;
-            border-radius: 16px;
-            padding: 20px 24px;
+            /* Glassmorphism эффект */
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 22px 26px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 2px solid transparent;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .option:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
         .option.active {
-            background: rgba(108, 92, 231, 0.15);
-            border-color: #6c5ce7;
+            background: rgba(167, 139, 250, 0.2);
+            border: 1px solid rgba(167, 139, 250, 0.5);
+            box-shadow: 
+                0 8px 32px rgba(167, 139, 250, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                0 0 20px rgba(167, 139, 250, 0.2);
         }
 
         .option-label {
             font-size: 18px;
             font-weight: 500;
             letter-spacing: 0.5px;
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .toggle {
             position: relative;
-            width: 56px;
-            height: 32px;
+            width: 60px;
+            height: 34px;
             cursor: pointer;
         }
 
@@ -71,64 +114,120 @@
         .toggle-slider {
             position: absolute;
             inset: 0;
-            background: #5a5a5e;
-            border-radius: 16px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 17px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
         }
 
         .toggle-slider::before {
             content: '';
             position: absolute;
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             left: 3px;
-            top: 3px;
-            background: #ffffff;
+            top: 2px;
+            background: linear-gradient(135deg, #ffffff 0%, #e0e0e0 100%);
             border-radius: 50%;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 2px 8px rgba(0, 0, 0, 0.3),
+                0 1px 3px rgba(0, 0, 0, 0.2);
         }
 
         .toggle input:checked + .toggle-slider {
-            background: #6c5ce7;
+            background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #c084fc 100%);
+            box-shadow: 
+                0 0 20px rgba(139, 92, 246, 0.5),
+                inset 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         .toggle input:checked + .toggle-slider::before {
-            transform: translateX(24px);
+            transform: translateX(26px);
+            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+            box-shadow: 
+                0 2px 12px rgba(139, 92, 246, 0.5),
+                0 1px 3px rgba(0, 0, 0, 0.2);
         }
 
         .status {
             text-align: center;
             margin-top: 32px;
-            padding: 12px 20px;
-            background: rgba(108, 92, 231, 0.1);
-            border-radius: 12px;
-            border: 1px solid rgba(108, 92, 231, 0.3);
+            padding: 16px 24px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
         }
 
         .status-text {
             font-size: 16px;
-            color: #a29bfe;
+            color: rgba(255, 255, 255, 0.7);
         }
 
         .status-count {
             font-weight: 700;
-            color: #6c5ce7;
-            font-size: 20px;
+            background: linear-gradient(135deg, #a78bfa 0%, #f472b6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 22px;
         }
 
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(0.95); }
+            50% { transform: scale(0.97); }
         }
 
         .option.deactivating {
             animation: pulse 0.3s ease;
         }
+
+        /* Декоративные плавающие элементы */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(60px);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .orb-1 {
+            width: 300px;
+            height: 300px;
+            background: rgba(139, 92, 246, 0.3);
+            top: -100px;
+            left: -100px;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 250px;
+            height: 250px;
+            background: rgba(244, 114, 182, 0.25);
+            bottom: -80px;
+            right: -80px;
+            animation: float 10s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, 20px); }
+        }
     </style>
 </head>
 <body>
+    <!-- Декоративные элементы -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
     <div class="container">
+        <h1 class="title">Выбери два</h1>
+        <p class="subtitle">Последние 2 выбранных остаются активными</p>
+        
         <div class="options">
             <div class="option" id="option1">
                 <span class="option-label">Натурал</span>
@@ -147,7 +246,7 @@
             </div>
             
             <div class="option" id="option3">
-                <span class="option-label">Большая залупа</span>
+                <span class="option-label">Темнокожий</span>
                 <label class="toggle">
                     <input type="checkbox" id="toggle3">
                     <span class="toggle-slider"></span>
@@ -163,7 +262,6 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        tg.HideHeader();
 
         const toggles = [
             document.getElementById('toggle1'),
