@@ -167,7 +167,7 @@
             </div>
             
             <div class="option" id="option3">
-                <span class="option-label">Темнокожий</span>
+                <span class="option-label">Маленькая залупа</span>
                 <label class="toggle">
                     <input type="checkbox" id="toggle3">
                     <span class="toggle-slider"></span>
@@ -244,3 +244,4 @@
     </script>
 </body>
 </html>
+
