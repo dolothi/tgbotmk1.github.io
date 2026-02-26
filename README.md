@@ -226,6 +226,7 @@
 
     <div class="container">
         <h1 class="title">Выбери два</h1>
+    
         
         <div class="options">
             <div class="option" id="option1">
@@ -245,7 +246,7 @@
             </div>
             
             <div class="option" id="option3">
-                <span class="option-label">Большая Залупа</span>
+                <span class="option-label">Большая залупа</span>
                 <label class="toggle">
                     <input type="checkbox" id="toggle3">
                     <span class="toggle-slider"></span>
